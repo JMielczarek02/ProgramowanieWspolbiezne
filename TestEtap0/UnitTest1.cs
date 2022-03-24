@@ -14,5 +14,14 @@ namespace TestEtap0
             int result = c1.add(value, value2);
             Assert.AreEqual(value + value2, result);
         }
+        [TestMethod]
+        public void TestSubstractMethod()
+        {
+            Etap0.Class1 c1 = new Etap0.Class1();
+            int value = 5;
+            int value2 = 2;
+            int result = c1.subtract(value, value2);
+            Assert.AreEqual(value - value2, result);
+        }
     }
 }
