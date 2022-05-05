@@ -1,67 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Data;
+using System.Collections.ObjectModel;
 using System.Numerics;
-using Data;
 
 namespace Logic
 {
-    internal class Logic : LogicApi
-
+    public class Logic : LogicApi
     {
-        private Vector2 board = new Vector2(750, 750);
+        private Vector2 size = new Vector2(750, 750);
         private DataApi data;
 
         public Logic()
         {
-            Vector2 positions = PutBallOnBoard();
-            data = DataApi.CreateBall(positions.X, positions.Y);
+            Vector2 cords = PutBallOnBoard();
+            data = DataApi.CreateBall(cords.X, cords.Y);
         }
 
-        public override LogicApi CreateBall()
-        {
-            Vector2 positions = PutBallOnBoard();
-            data = DataApi.CreateBall(positions.X, positions.Y);
-            return LogicApi.CreateLogic(data);
-        }
-
-        public override Vector2 GetBallPosition()
-        {
-            return new Vector2((float)data.getXPosition(), (float)data.getYPosition());
-        }
-
-        public override DataApi getDataApi()
+        public override DataApi GetDataAPI()
         {
             return data;
         }
 
-        public override Vector2 MoveBall(Vector2 position, Vector2 newPosition, int steps)
+
+        public override Vector2 getBallPosition()
         {
-            Vector2 movement = newPosition - position;
-            return position + (movement / steps);
+            return new Vector2((float)data.getXPosition(), (float)data.getYPosition());
         }
 
-        public override Vector2 PutBallOnBoard()
-        {
-            Random random = new Random();
-            double x = random.NextDouble() * board.X; 
-            random = new Random();
-            double y = random.NextDouble() * board.Y;
-            // W razie czego dodac tu 
-            y = y + 30;
-            return new Vector2((float)x, (float)y);
-        }
-
-        public override void SetBallXPosition(double x)
+        public override void setBallXPosition(double x)
         {
             data.setXPosition(x);
         }
 
-        public override void SetBallYPosition(double y)
+        public override void setBallYPosition(double y)
         {
             data.setYPosition(y);
+        }
+
+        public override Vector2 PutBallOnBoard()
+        {
+            Random r = new Random();
+            double x = r.NextDouble() * size.X;
+            r = new Random();
+            double y = r.NextDouble() * size.Y;
+            y += 30;
+            return new Vector2((float)x, (float)y);
+        }
+
+        public override Vector2 NextStepPosition(Vector2 position, Vector2 nextPosition, int steps)
+        {
+            Vector2 movement = nextPosition - position;
+            return position + (movement / steps);
+        }
+
+        public override LogicApi CreateBall()
+        {
+            Vector2 coords = PutBallOnBoard();
+            data = DataApi.CreateBall(coords.X, coords.Y);
+            return LogicApi.CreateObjLogic(data);
         }
     }
 }

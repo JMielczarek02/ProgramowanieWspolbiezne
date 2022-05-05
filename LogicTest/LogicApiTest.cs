@@ -14,11 +14,11 @@ namespace LogicTest
         [TestMethod]
         public void TestBallMovement()
         {
-            testBall = LogicApi.CreateLogic();
+            testBall = LogicApi.CreateObjLogic();
             position = new Vector2(5, 30);
             nextPosition = new Vector2(30, 5);
             int steps = 5;
-            ballSteps = testBall.MoveBall(position, nextPosition, steps);
+            ballSteps = testBall.NextStepPosition(position, nextPosition, steps);
             Assert.AreEqual(ballSteps.X, ((nextPosition.X - position.X) / steps) + position.X);
             Assert.AreEqual(ballSteps.Y, ((nextPosition.Y - position.Y) / steps) + position.Y);
         }

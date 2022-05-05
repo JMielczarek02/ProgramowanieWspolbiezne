@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Logic;
+﻿using Logic;
 using System.Numerics;
+using System.Diagnostics;
 
 namespace Model
 {
     public class BallModel
-
     {
         private LogicApi logic;
         private double X;
@@ -17,38 +12,41 @@ namespace Model
 
         public BallModel()
         {
-            logic = LogicApi.CreateLogic();
-            X = logic.GetBallPosition().X;
-            Y = logic.GetBallPosition().Y;
-        }
-        public double xPosition
-        {
-            get
-            {
-                return logic.GetBallPosition().X;
-            }
-            set
-            {
-                logic.SetBallXPosition(value);
-            }
-        }
-        public double yPosition
-        {
-            get
-            {
-                return logic.GetBallPosition().Y;
-            }
-            set
-            {
-                logic.SetBallYPosition(value);
-            }
-        }
-        public Vector2 getModelPosition()
-        {
-            return new Vector2((float)xPosition, (float)xPosition); //Tu moze byc blad
+            logic = LogicApi.CreateObjLogic();
+            X = logic.getBallPosition().X;
+            Y = logic.getBallPosition().Y;
         }
 
-        public Vector2 getBallPosition()
+        public double ModelXPosition
+        {
+            get
+            {
+                return logic.getBallPosition().X;
+            }
+            set
+            {
+                logic.setBallXPosition(value);
+            }
+        }
+
+        public double ModelYPosition
+        {
+            get
+            {
+                return logic.getBallPosition().Y;
+            }
+            set
+            {
+                logic.setBallYPosition(value);
+            }
+        }
+
+        public Vector2 getModelPosition()
+        {
+            return new Vector2((float)ModelXPosition, (float)ModelYPosition);
+        }
+
+        public Vector2 GetBallPosition()
         {
             return logic.PutBallOnBoard();
         }

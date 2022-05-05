@@ -8,20 +8,20 @@ namespace Logic
 {
     internal class BallsCollection : BallsCollectionApi
     {
-        List<LogicApi> collection;
-        public override void CreateCollection(int size)
+        List<LogicApi> ballCollection;
+        public override void CreateBallCollection(int size)
         {
-            collection = new List<LogicApi>();
-            for(int i = 0; i < size; i++)
+            ballCollection = new List<LogicApi>();
+            for (int i = 0; i < size; i++)
             {
                 Logic ball = new Logic();
-                collection.Add(ball.CreateBall());
+                ballCollection.Add(ball.CreateBall());
             }
         }
 
-        public override List<LogicApi> getCollection()
+        public override List<LogicApi> GetBallCollection()
         {
-            return collection;
+            return ballCollection;
         }
     }
 }

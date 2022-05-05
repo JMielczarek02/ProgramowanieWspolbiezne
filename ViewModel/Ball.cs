@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Data;
+using Logic;
 using Model;
 using System.Numerics;
 
@@ -10,69 +7,71 @@ namespace ViewModel
 {
     public class Ball : VM
     {
+
+
+        private double r = 15;
+        private BallModel ball;
         private double X;
         private double Y;
-        private BallModel ballModel;
-        private double r = 10;
 
         public Ball()
         {
-            ballModel = new BallModel();
+            ball = new BallModel();
         }
-
-        public Ball(BallModel model)
+        public Ball(BallModel ballModel)
         {
-            X = model.xPosition;
-            Y = model.yPosition;
-            ballModel = new BallModel();
+            X = ballModel.ModelXPosition;
+            Y = ballModel.ModelYPosition;
+            ball = new BallModel();
         }
 
-        public Vector2 nextPosition { get; set; }
-        public Vector2 nextStep { get; set; }
+        public Vector2 NextPosition { get; set; }
+        public Vector2 NextStepVector { get; set; }
 
-        public double d
+
+        public double BallDiameter
         {
             get
             {
                 return r * 2;
             }
         }
-
-        public double xPosition
+        public double XPos
         {
             get
             {
-                return ballModel.xPosition;
+                return ball.ModelXPosition;
             }
             set
             {
-                ballModel.xPosition = value;
-                RaisePropertChanged("xPositionChanged");
+                ball.ModelXPosition = value;
+                RaisePropertyChanged("XPos");
             }
         }
-        public double yPosition
+        public double YPos
         {
             get
             {
-                return ballModel.yPosition;
+                return ball.ModelYPosition;
             }
             set
             {
-                ballModel.yPosition = value;
-                RaisePropertChanged("yPositionChanged");
+                ball.ModelYPosition = value;
+                RaisePropertyChanged("YPos");
             }
         }
 
-        public Vector2 getViewModelPosition()
+        public Vector2 getPosBallVM()
         {
-            return new Vector2((float)xPosition, (float)yPosition);
+            return new Vector2((float)XPos, (float)YPos);
         }
 
-        public Vector2 getBallPosition()
+        public Vector2 GetBallVMPosition()
         {
-            return ballModel.getBallPosition();
+            return ball.GetBallPosition();
         }
-        public double R
+
+        public double Radius
         {
             get
             {
@@ -84,5 +83,4 @@ namespace ViewModel
             }
         }
     }
-
 }

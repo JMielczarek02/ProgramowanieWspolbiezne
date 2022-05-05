@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using Model;
 
 namespace ViewModel
 {
     internal class BallViewModelCollection
     {
-        public ObservableCollection<Ball> CreateBallVMCollection(int size)
+
+        public ObservableCollection<Ball> CreateBallVMCollection(int quantity)
         {
             BallModelCollection ballModelCollection = new BallModelCollection();
-            ballModelCollection.CreateModelCollection(size);
+            ballModelCollection.CreateBallModelCollection(quantity);
             List<BallModel> ballCollection = ballModelCollection.GetBallModelCollection();
             ObservableCollection<Ball> ballVMCollection = new ObservableCollection<Ball>();
-            foreach (BallModel x in ballCollection)
+            foreach (BallModel ballM in ballCollection)
             {
-                Ball ballVM = new Ball(x);
-                ballVM.xPosition = x.xPosition;
-                ballVM.yPosition = x.yPosition;
+                Ball ballVM = new Ball(ballM);
+                ballVM.XPos = ballM.ModelXPosition;
+                ballVM.YPos = ballM.ModelYPosition;
                 ballVMCollection.Add(ballVM);
             }
 

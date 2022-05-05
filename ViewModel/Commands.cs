@@ -1,39 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace ViewModel
 {
     public class Commands : ICommand
     {
-        private readonly Action _execute;
-        private readonly Func<bool> _canExecute;
+        private readonly Action execute;
+        private readonly Func<bool> canExecute;
 
         public event EventHandler? CanExecuteChanged;
         public Commands(Action execute) : this(execute, null) { }
 
         public Commands(Action execute, Func<bool> canExecute)
         {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
+            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            this.canExecute = canExecute;
         }
 
 
 
         public bool CanExecute(object parameter)
         {
-            if (_canExecute == null) return true;
-            if (parameter == null) return _canExecute();
+            if (canExecute == null) return true;
+            if (parameter == null) return canExecute();
 
-            return _canExecute();
+            return canExecute();
         }
 
         public virtual void Execute(object parameter)
         {
-            this._execute();
+            this.execute();
         }
 
         internal void RaiseCanExecuteChanged()

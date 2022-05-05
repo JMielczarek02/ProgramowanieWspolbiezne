@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Collections.ObjectModel;
-using ViewModel;
-using System.Numerics;
-using System.Windows.Input;
-using Logic;
+﻿using System.Windows.Input;
+using Model;
 
+using System.Collections.ObjectModel;
+using System.Numerics;
+using Logic;
 
 namespace ViewModel
 {
     public class Controls : VM
     {
-        Ball _ballVM;
+        Ball ball;
 
-        private ObservableCollection<Ball> _items;
-        private static System.Timers.Timer? _newTargetTimer;
-        private static System.Timers.Timer? _newPositionTimer;
-        private string _ballQuantityText = "1";
-        private int _ballQuantity = 1;
-        private int _frameRate = 50;
+        private ObservableCollection<Ball> items;
+        private static System.Timers.Timer? targetTimer;
+        private static System.Timers.Timer? positionTimer;
+        private string ballAmountText = "1";
+        private int ballAmount = 1;
+        private int fr = 50;
 
         public Controls()
         {
@@ -30,7 +24,7 @@ namespace ViewModel
             CreateBallsButtonClick = new Commands(() => getBallVMCollection());
             AddBallButtonClick = new Commands(() => AddBallClickHandler());
             RemoveBallButtonClick = new Commands(() => RemoveBallButtonClickHandler());
-            _ballVM = new Ball();
+            ball = new Ball();
         }
 
         public ICommand CreateBallsButtonClick { get; set; }
@@ -40,113 +34,109 @@ namespace ViewModel
 
         private void getBallVMCollection()
         {
-            if (_newPositionTimer != null)
+            if (positionTimer != null)
             {
-                _newPositionTimer.Stop();
+                positionTimer.Stop();
             }
-            if (_newTargetTimer != null)
+            if (targetTimer != null)
             {
-                _newTargetTimer.Stop();
+                targetTimer.Stop();
             }
             Items = new ObservableCollection<Ball>();
             BallViewModelCollection ballVMColl = new BallViewModelCollection();
-            Items = ballVMColl.CreateBallVMCollection(_ballQuantity);
-            InitBallTargetPosition();
-            InitSmoothMovement();
+            Items = ballVMColl.CreateBallVMCollection(ballAmount);
+            initBalls();
+            initMovement();
         }
 
         public ObservableCollection<Ball> Items
         {
             get
             {
-                return _items;
+                return items;
             }
             set
             {
-                _items = value;
-                RaisePropertChanged("Items");
+                items = value;
+                RaisePropertyChanged("Items");
             }
         }
         private void AddBallClickHandler()
         {
-            if (String.IsNullOrEmpty(BallQuantityText))
+            if (String.IsNullOrEmpty(BallAmountText))
             {
-                _ballQuantity = 1;
+                ballAmount = 1;
             }
             else
             {
-                _ballQuantity++;
+                ballAmount++;
             }
 
-            BallQuantityText = _ballQuantity.ToString();
+            BallAmountText = ballAmount.ToString();
         }
 
         private void RemoveBallButtonClickHandler()
         {
-            if (_ballQuantity > 1)
-                _ballQuantity--;
+            if (ballAmount > 1)
+                ballAmount--;
 
-            BallQuantityText = _ballQuantity.ToString();
+            BallAmountText = ballAmount.ToString();
         }
 
-        public string BallQuantityText
+        public string BallAmountText
         {
             get
             {
-                return _ballQuantityText;
+                return ballAmountText;
             }
             set
             {
-                _ballQuantityText = value;
-                _ballQuantity = int.Parse(_ballQuantityText);
-                RaisePropertChanged("BallQuantityText");
+                ballAmountText = value;
+                ballAmount = int.Parse(ballAmountText);
+                RaisePropertyChanged("BallAmountText");
             }
         }
 
-        private void InitBallTargetPosition() // initiates and updates target position to which every Ball moves towards
+        private void initBalls() 
         {
-            // sets initial target position
-            foreach (var item in Items)
+            foreach (var x in Items)
             {
-                Vector2 targetPos = _ballVM.getBallPosition();
-                item.nextPosition = targetPos;
+                Vector2 targetPos = ball.GetBallVMPosition();
+                x.NextPosition = targetPos;
             }
-            // updates target position periodically
-            _newTargetTimer = new System.Timers.Timer(1000);
-            _newTargetTimer.Elapsed += UpdateBallTargetPositionEvent;
-            _newTargetTimer.Start();
+            targetTimer = new System.Timers.Timer(1000);
+            targetTimer.Elapsed += UpdateBallTargetPositionEvent;
+            targetTimer.Start();
         }
 
-        private void InitSmoothMovement()
+        private void initMovement()
         {
-            // updates current ball position every frame
-            _newPositionTimer = new System.Timers.Timer(800 / _frameRate);
-            _newPositionTimer.Elapsed += BallSmoothMovementEvent;
-            _newPositionTimer.Start();
+            positionTimer = new System.Timers.Timer(800 / fr);
+            positionTimer.Elapsed += BallSmoothMovementEvent;
+            positionTimer.Start();
         }
 
-        private void BallSmoothMovementEvent(object? sender, EventArgs e) // updates ball position each frame
+        private void BallSmoothMovementEvent(object? sender, EventArgs e) 
         {
-            foreach (var item in Items)
+            foreach (var x in Items)
             {
-                if (item is Ball)
+                if (x is Ball)
                 {
-                    Vector2 currentPos = new Vector2((float)item.xPosition, (float)item.yPosition);
-                    Vector2 a = ((item.nextPosition - currentPos) / _frameRate) + currentPos;
-                    item.xPosition = a.X;
-                    item.yPosition = a.Y;
+                    Vector2 currentPos = new Vector2((float)x.XPos, (float)x.YPos);
+                    Vector2 a = ((x.NextPosition - currentPos) / fr) + currentPos;
+                    x.XPos = a.X;
+                    x.YPos = a.Y;
                 }
             }
         }
 
         private void UpdateBallTargetPositionEvent(object? sender, EventArgs e) // sets target position
         {
-            foreach (var item in Items)
+            foreach (var x in Items)
             {
-                Vector2 targetPos = _ballVM.getBallPosition();
-                item.nextPosition = targetPos;
+                Vector2 targetPos = ball.GetBallVMPosition();
+                x.NextPosition = targetPos;
             }
         }
     }
 }
-
