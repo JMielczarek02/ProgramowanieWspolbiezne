@@ -11,7 +11,7 @@ namespace Logic
     internal class Logic : LogicApi
 
     {
-        private Vector2 board = new Vector2(500, 500);
+        private Vector2 board = new Vector2(750, 750);
         private DataApi data;
 
         public Logic()
@@ -50,7 +50,7 @@ namespace Logic
             random = new Random();
             double y = random.NextDouble() * board.Y;
             // W razie czego dodac tu 
-            //y = y + 30;
+            y = y + 30;
             return new Vector2((float)x, (float)y);
         }
 
