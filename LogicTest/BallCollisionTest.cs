@@ -3,33 +3,33 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TestLogic
 {
     [TestClass]
-    public class BallCollisionTest
+    public class CollisionTest
     {
-        private LogicAbstractApi Api;
+        private LogicAbstractApi LApi;
 
 
         [TestMethod]
         public void testCollision()
         {
-            Api = LogicAbstractApi.createApi(800, 600);
-            Api.createBalls(2);
+            LApi = LogicAbstractApi.CreateApi(800, 600);
+            LApi.CreateBalls(2);
 
-            Api.getBall(0).ballNewX = 5;
-            Api.getBall(0).ballNewY = 5;
-            Api.getBall(1).ballNewX = -3;
-            Api.getBall(1).ballNewY = -3;
+            LApi.GetBall(0).NewX = 5;
+            LApi.GetBall(0).NewY = 5;
+            LApi.GetBall(1).NewX = -3;
+            LApi.GetBall(1).NewY = -3;
 
-            Api.getBall(0).ballX = 20;
-            Api.getBall(1).ballX = 30;
-            Api.getBall(0).ballY = 20;
-            Api.getBall(1).ballY = 30;
-            Api.getBall(0).ballMove();
-            Api.getBall(1).ballMove();
+            LApi.GetBall(0).X = 20;
+            LApi.GetBall(1).X = 30;
+            LApi.GetBall(0).Y = 20;
+            LApi.GetBall(1).Y = 30;
+            LApi.GetBall(0).Move();
+            LApi.GetBall(1).Move();
 
-            Assert.AreNotEqual(-3, Api.getBall(1).ballNewX);
-            Assert.AreNotEqual(-3, Api.getBall(1).ballNewY);
-            Assert.AreNotEqual(5, Api.getBall(0).ballNewX);
-            Assert.AreNotEqual(5, Api.getBall(0).ballNewY);
+            Assert.AreNotEqual(-3, LApi.GetBall(1).NewX);
+            Assert.AreNotEqual(-3, LApi.GetBall(1).NewY);
+            Assert.AreNotEqual(5, LApi.GetBall(0).NewX);
+            Assert.AreNotEqual(5, LApi.GetBall(0).NewY);
 
 
 
@@ -39,20 +39,20 @@ namespace TestLogic
         [TestMethod]
         public void testWallCollision()
         {
-            Api = LogicAbstractApi.createApi(800, 600);
-            Api.createBalls(1);
-            Api.getBall(0).ballNewX = 5;
-            Api.getBall(0).ballX = 790;
-            Assert.AreNotEqual(5, Api.getBall(0).ballNewX);
-            Api.getBall(0).ballNewX = -3;
-            Api.getBall(0).ballX = -3;
-            Assert.AreNotEqual(-3, Api.getBall(0).ballNewX);
-            Api.getBall(0).ballNewY = -7;
-            Api.getBall(0).ballY = -2;
-            Assert.AreNotEqual(-7, Api.getBall(0).ballNewY);
-            Api.getBall(0).ballNewY = 7;
-            Api.getBall(0).ballY = 607;
-            Assert.AreNotEqual(7, Api.getBall(0).ballNewY);
+            LApi = LogicAbstractApi.CreateApi(800, 600);
+            LApi.CreateBalls(1);
+            LApi.GetBall(0).NewX = 5;
+            LApi.GetBall(0).X = 790;
+            Assert.AreNotEqual(5, LApi.GetBall(0).NewX);
+            LApi.GetBall(0).NewX = -3;
+            LApi.GetBall(0).X = -3;
+            Assert.AreNotEqual(-3, LApi.GetBall(0).NewX);
+            LApi.GetBall(0).NewY = -7;
+            LApi.GetBall(0).Y = -2;
+            Assert.AreNotEqual(-7, LApi.GetBall(0).NewY);
+            LApi.GetBall(0).NewY = 7;
+            LApi.GetBall(0).Y = 607;
+            Assert.AreNotEqual(7, LApi.GetBall(0).NewY);
 
         }
     }

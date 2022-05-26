@@ -3,31 +3,31 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TestLogic
 {
     [TestClass]
-    public class LogicCreateTest
+    public class CreationTest
     {
 
-        private LogicAbstractApi Api;
+        private LogicAbstractApi LApi;
 
 
         [TestMethod]
         public void testCreateApi()
         {
-            Api = LogicAbstractApi.createApi(800, 600);
-            Assert.IsNotNull(Api);
+            LApi = LogicAbstractApi.CreateApi(800, 600);
+            Assert.IsNotNull(LApi);
         }
 
         [TestMethod]
         public void getCount()
         {
-            Api = LogicAbstractApi.createApi(800, 600);
-            Assert.AreEqual(800, Api.width);
-            Assert.AreEqual(600, Api.height);
-            Api.createBalls(5);
-            Assert.AreEqual(5, Api.getAmount);
-            Api.createBalls(-3);
-            Assert.AreEqual(2, Api.getAmount);
-            Api.createBalls(-3);
-            Assert.AreEqual(0, Api.getAmount);
+            LApi = LogicAbstractApi.CreateApi(800, 600);
+            Assert.AreEqual(800, LApi.Width);
+            Assert.AreEqual(600, LApi.Height);
+            LApi.CreateBalls(5);
+            Assert.AreEqual(5, LApi.GetCount);
+            LApi.CreateBalls(-3);
+            Assert.AreEqual(2, LApi.GetCount);
+            LApi.CreateBalls(-3);
+            Assert.AreEqual(0, LApi.GetCount);
         }
 
 
