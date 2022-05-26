@@ -8,24 +8,9 @@ namespace TestData
         private DataAbstractApi Api;
 
         [TestMethod]
-        public void createIBallTest()
-        {
-            Api = DataAbstractApi.createApi(800, 600);
-            Api.createBallsList(1);
-            Assert.AreEqual(1, Api.getBall(0).ballId);
+        
 
-            Assert.IsTrue(Api.getBall(0).ballX >= Api.getBall(0).ballSize);
-            Assert.IsTrue(Api.getBall(0).ballX <= (Api.width - Api.getBall(0).ballSize));
-            Assert.IsTrue(Api.getBall(0).ballY >= Api.getBall(0).ballSize);
-            Assert.IsTrue(Api.getBall(0).ballY <= (Api.height - Api.getBall(0).ballSize));
-
-            Assert.IsTrue(Api.getBall(0).ballSize >= 20 && Api.getBall(0).ballSize <= 40);
-            Assert.IsTrue(Api.getBall(0).ballWeight == Api.getBall(0).ballSize);
-            Assert.IsTrue(Api.getBall(0).ballNewX >= -10 && Api.getBall(0).ballNewX <= 11);
-            Assert.IsTrue(Api.getBall(0).ballNewY >= -10 && Api.getBall(0).ballNewY <= 11);
-        }
-
-        [TestMethod]
+       
         public void moveTest()
         {
             Api = DataAbstractApi.createApi(800, 600);
