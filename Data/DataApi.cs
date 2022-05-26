@@ -7,16 +7,14 @@ namespace Data
 {
     public abstract class DataAbstractApi
     {
+        public abstract int getAmount { get; }
+        public abstract IList createBallsList(int count);
+        public abstract int width { get; }
+        public abstract int height { get; }
 
-        public abstract int GetCount { get; }
-        public abstract IList CreateBallsList(int count);
-        public abstract int Width { get; }
-        public abstract int Height { get; }
+        public abstract IBall getBall(int index);
 
-
-        public abstract IBall GetBall(int index);
-
-        public static DataAbstractApi CreateApi(int width, int height)
+        public static DataAbstractApi createApi(int width, int height)
         {
             return new DataApi(width, height);
         }
@@ -29,70 +27,59 @@ namespace Data
 
         private readonly Random random = new Random();
 
-        public override int Width { get; }
-        public override int Height { get; }
-
-
+        public override int width { get; }
+        public override int height { get; }
 
         public DataApi(int width, int height)
         {
             balls = new ObservableCollection<IBall>();
-            Width = width;
-            Height = height;
-
+            this.width = width;
+            this.height = height;
         }
 
         public ObservableCollection<IBall> Balls => balls;
 
-        public override IList CreateBallsList(int count)
+        public override IList createBallsList(int count)
         {
-
             if (count > 0)
             {
                 int ballsCount = balls.Count;
                 for (int i = 0; i < count; i++)
                 {
                     mutex.WaitOne();
-                    int radius = 20;
+                    int r = 20;
                     int pom = random.Next(20, 40);
                     double weight = pom;
-                    double x = random.Next(radius, Width - radius);
-                    double y = random.Next(radius, Height - radius);
+                    double x = random.Next(r, width - r);
+                    double y = random.Next(r, height - r);
                     double newX = random.Next(-10, 10) + random.NextDouble();
                     double newY = random.Next(-10, 10) + random.NextDouble();
-                    Ball ball = new Ball(i + 1 + ballsCount, radius, x, y, newX, newY, weight);
+                    Ball ball = new Ball(i + 1 + ballsCount, r, x, y, newX, newY, weight);
 
                     balls.Add(ball);
                     mutex.ReleaseMutex();
-
                 }
             }
             if (count < 0)
             {
                 for (int i = count; i < 0; i++)
                 {
-
                     if (balls.Count > 0)
                     {
                         mutex.WaitOne();
                         balls.Remove(balls[balls.Count - 1]);
                         mutex.ReleaseMutex();
                     };
-
                 }
             }
             return balls;
         }
 
-        public override int GetCount { get => balls.Count; }
+        public override int getAmount { get => balls.Count; }
 
-
-
-        public override IBall GetBall(int index)
+        public override IBall getBall(int index)
         {
             return balls[index];
         }
-
-
     }
 }

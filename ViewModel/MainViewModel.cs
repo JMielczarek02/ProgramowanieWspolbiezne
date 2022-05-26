@@ -4,10 +4,9 @@ using System.Windows.Input;
 
 namespace ViewModel
 {
-
     public class MainWindowViewModel : BaseViewModel
     {
-        private readonly ModelAbstractApi ModelLayer;
+        private readonly ModelAbstractApi modelLayer;
         private int _BallVal = 1;
         private int width;
         private int height;
@@ -16,19 +15,22 @@ namespace ViewModel
         private bool _isAddEnabled = true;
         private int size = 0;
         private IList _balls;
-        public ICommand AddCommand { get; set; }
-        public ICommand RunCommand { get; set; }
-        public ICommand StopCommand
+
+        public ICommand addCommand { get; set; }
+
+        public ICommand runCommand { get; set; }
+
+        public ICommand stopCommand
         { get; set; }
+
         public MainWindowViewModel()
         {
             width = 600;
             height = 480;
-            ModelLayer = ModelAbstractApi.CreateApi(width, height);
-            StopCommand = new RelayCommand(Stop);
-            AddCommand = new RelayCommand(AddBalls);
-            RunCommand = new RelayCommand(Start);
-
+            modelLayer = ModelAbstractApi.createApi(width, height);
+            stopCommand = new RelayCommand(Stop);
+            addCommand = new RelayCommand(AddBalls);
+            runCommand = new RelayCommand(Start);
         }
 
         public bool isStopEnabled
@@ -60,61 +62,52 @@ namespace ViewModel
             set
             {
                 _isAddEnabled = value;
-
                 RaisePropertyChanged();
             }
         }
 
-        public int BallVal
+        public int ballValue
         {
             get
             {
-
                 return _BallVal;
             }
             set
             {
-
                 _BallVal = value;
                 RaisePropertyChanged();
-
-
             }
-
         }
+
         public int Width
         {
             get
             {
-
                 return width;
             }
             set
             {
-
                 width = value;
                 RaisePropertyChanged();
             }
-
         }
+
         public int Height
         {
             get
             {
-
                 return height;
             }
             set
             {
-
                 height = value;
                 RaisePropertyChanged();
             }
-
         }
+
         private void AddBalls()
         {
-            size += BallVal;
+            size += ballValue;
             if (size > 0)
             {
                 isRunEnabled = true;
@@ -124,25 +117,26 @@ namespace ViewModel
                 size = 0;
                 isRunEnabled = false;
             }
-            Balls = ModelLayer.Start(BallVal);
-            BallVal = 1;
-
-
+            Balls = modelLayer.start(ballValue);
+            ballValue = 1;
         }
+
         private void Stop()
         {
             isStopEnabled = false;
             isAddEnabled = true;
             isRunEnabled = true;
-            ModelLayer.Stop();
+            modelLayer.stop();
         }
+
         private void Start()
         {
             isStopEnabled = true;
             isRunEnabled = false;
             isAddEnabled = false;
-            ModelLayer.StartMoving();
+            modelLayer.startMoving();
         }
+
         public IList Balls
         {
             get => _balls;
@@ -157,7 +151,5 @@ namespace ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
     }
 }

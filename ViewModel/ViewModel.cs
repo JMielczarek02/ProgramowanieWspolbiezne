@@ -5,7 +5,6 @@ namespace ViewModel
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <param name="propertyName">(optional) The name of the property that changed.

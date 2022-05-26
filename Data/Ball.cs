@@ -8,22 +8,17 @@ namespace Data
 {
     public interface IBall : INotifyPropertyChanged
     {
-        int ID { get; }
-        int Size { get; }
-        double Weight { get; }
-        double X { get; set; }
-        double Y { get; set; }
-        double NewX { get; set; }
-        double NewY { get; set; }
+        int ballId { get; }
+        int ballSize { get; }
+        double ballWeight { get; }
+        double ballX { get; set; }
+        double ballY { get; set; }
+        double ballNewX { get; set; }
+        double ballNewY { get; set; }
 
-        void Move();
-        void CreateMovementTask(int interval);
-
-        void Stop();
-
-        
-
-
+        void ballMove();
+        void ballCreateMovementTask(int interval);
+        void ballStop();
     }
 
     internal class Ball : IBall
@@ -50,9 +45,9 @@ namespace Data
             this.weight = weight;
         }
 
-        public int ID { get => id; }
-        public int Size { get => size; }
-        public double NewX
+        public int ballId { get => id; }
+        public int ballSize { get => size; }
+        public double ballNewX
         {
             get => newX;
             set
@@ -63,10 +58,10 @@ namespace Data
                 }
 
                 newX = value;
-
             }
         }
-        public double NewY
+
+        public double ballNewY
         {
             get => newY;
             set
@@ -80,7 +75,8 @@ namespace Data
 
             }
         }
-        public double X
+
+        public double ballX
         {
             get => x;
             set
@@ -94,7 +90,8 @@ namespace Data
                 RaisePropertyChanged();
             }
         }
-        public double Y
+
+        public double ballY
         {
             get => y;
             set
@@ -109,14 +106,13 @@ namespace Data
             }
         }
 
-        public void Move()
+        public void ballMove()
         {
-            X +=  NewX;
-            Y +=  NewY;
+            ballX +=  ballNewX;
+            ballY +=  ballNewY;
         }
 
-
-        public double Weight { get => weight; }
+        public double ballWeight { get => weight; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -124,7 +120,8 @@ namespace Data
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public void CreateMovementTask(int interval)
+
+        public void ballCreateMovementTask(int interval)
         {
             stop = false;
             task = Run(interval);
@@ -138,19 +135,17 @@ namespace Data
                 stopwatch.Start();
                 if (!stop)
                 {
-                    Move();
-                 
+                    ballMove();
                 }
-                stopwatch.Stop();
 
+                stopwatch.Stop();
                 await Task.Delay((int)(interval - stopwatch.ElapsedMilliseconds));
             }
         }
-        public void Stop()
+        public void ballStop()
         {
             stop = true;
         }
-
     }
 }
 

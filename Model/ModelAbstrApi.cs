@@ -9,12 +9,12 @@ namespace Model
     {
         public abstract int width { get; }
         public abstract int height { get; }
-        public abstract void StartMoving();
-        public abstract IList Start(int ballVal);
-        public abstract void Stop();
+        public abstract void startMoving();
+        public abstract IList start(int ballVal);
+        public abstract void stop();
 
 
-        public static ModelAbstractApi CreateApi(int Weight, int Height)
+        public static ModelAbstractApi createApi(int Weight, int Height)
         {
             return new ModelApi(Weight, Height);
         }
@@ -23,30 +23,26 @@ namespace Model
     {
         public override int width { get; }
         public override int height { get; }
-        private readonly LogicAbstractApi LogicLayer;
+        private readonly LogicAbstractApi logicLayer;
 
         public ModelApi(int Width, int Height)
         {
-
             width = Width;
             height = Height;
-            LogicLayer = LogicAbstractApi.CreateApi(width, height);
-
-
+            logicLayer = LogicAbstractApi.createApi(width, height);
         }
 
-        public override void StartMoving()
+        public override void startMoving()
         {
-            LogicLayer.Start();
+            logicLayer.start();
         }
 
-
-        public override void Stop()
+        public override void stop()
         {
-            LogicLayer.Stop();
+            logicLayer.stop();
         }
 
-        public override IList Start(int ballVal) => LogicLayer.CreateBalls(ballVal);
+        public override IList start(int ballVal) => logicLayer.createBalls(ballVal);
 
     }
 

@@ -5,34 +5,27 @@ namespace TestLogic
     [TestClass]
     public class CreationTest
     {
-
-        private LogicAbstractApi LApi;
-
+        private LogicAbstractApi Api;
 
         [TestMethod]
         public void testCreateApi()
         {
-            LApi = LogicAbstractApi.CreateApi(800, 600);
-            Assert.IsNotNull(LApi);
+            Api = LogicAbstractApi.createApi(800, 600);
+            Assert.IsNotNull(Api);
         }
 
         [TestMethod]
         public void getCount()
         {
-            LApi = LogicAbstractApi.CreateApi(800, 600);
-            Assert.AreEqual(800, LApi.Width);
-            Assert.AreEqual(600, LApi.Height);
-            LApi.CreateBalls(5);
-            Assert.AreEqual(5, LApi.GetCount);
-            LApi.CreateBalls(-3);
-            Assert.AreEqual(2, LApi.GetCount);
-            LApi.CreateBalls(-3);
-            Assert.AreEqual(0, LApi.GetCount);
+            Api = LogicAbstractApi.createApi(800, 600);
+            Assert.AreEqual(800, Api.width);
+            Assert.AreEqual(600, Api.height);
+            Api.createBalls(5);
+            Assert.AreEqual(5, Api.getAmount);
+            Api.createBalls(-3);
+            Assert.AreEqual(2, Api.getAmount);
+            Api.createBalls(-3);
+            Assert.AreEqual(0, Api.getAmount);
         }
-
-
-
-
-
     }
 }

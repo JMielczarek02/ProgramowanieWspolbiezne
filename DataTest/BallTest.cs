@@ -2,62 +2,56 @@ using Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TestData
 {
-
-
     [TestClass]
     public class BallTest
     {
-        private DataAbstractApi DApi;
+        private DataAbstractApi Api;
 
         [TestMethod]
         public void createIBallTest()
         {
-            DApi = DataAbstractApi.CreateApi(800, 600);
-            DApi.CreateBallsList(1);
-            Assert.AreEqual(1, DApi.GetBall(0).ID);
+            Api = DataAbstractApi.createApi(800, 600);
+            Api.createBallsList(1);
+            Assert.AreEqual(1, Api.getBall(0).ballId);
 
-            Assert.IsTrue(DApi.GetBall(0).X >= DApi.GetBall(0).Size);
-            Assert.IsTrue(DApi.GetBall(0).X <= (DApi.Width - DApi.GetBall(0).Size));
-            Assert.IsTrue(DApi.GetBall(0).Y >= DApi.GetBall(0).Size);
-            Assert.IsTrue(DApi.GetBall(0).Y <= (DApi.Height - DApi.GetBall(0).Size));
+            Assert.IsTrue(Api.getBall(0).ballX >= Api.getBall(0).ballSize);
+            Assert.IsTrue(Api.getBall(0).ballX <= (Api.width - Api.getBall(0).ballSize));
+            Assert.IsTrue(Api.getBall(0).ballY >= Api.getBall(0).ballSize);
+            Assert.IsTrue(Api.getBall(0).ballY <= (Api.height - Api.getBall(0).ballSize));
 
-            Assert.IsTrue(DApi.GetBall(0).Size >= 20 && DApi.GetBall(0).Size <= 40);
-            Assert.IsTrue(DApi.GetBall(0).Weight == DApi.GetBall(0).Size);
-            Assert.IsTrue(DApi.GetBall(0).NewX >= -10 && DApi.GetBall(0).NewX <= 11);
-            Assert.IsTrue(DApi.GetBall(0).NewY >= -10 && DApi.GetBall(0).NewY <= 11);
+            Assert.IsTrue(Api.getBall(0).ballSize >= 20 && Api.getBall(0).ballSize <= 40);
+            Assert.IsTrue(Api.getBall(0).ballWeight == Api.getBall(0).ballSize);
+            Assert.IsTrue(Api.getBall(0).ballNewX >= -10 && Api.getBall(0).ballNewX <= 11);
+            Assert.IsTrue(Api.getBall(0).ballNewY >= -10 && Api.getBall(0).ballNewY <= 11);
         }
 
         [TestMethod]
         public void moveTest()
         {
-            DApi = DataAbstractApi.CreateApi(800, 600);
-            DApi.CreateBallsList(1);
-            double x = DApi.GetBall(0).X;
-            double y = DApi.GetBall(0).Y;
-            DApi.GetBall(0).NewX = 5;
-            DApi.GetBall(0).NewY = 5;
-            DApi.GetBall(0).Move();
-            Assert.AreNotEqual(x, DApi.GetBall(0).X);
-            Assert.AreNotEqual(y, DApi.GetBall(0).Y);
+            Api = DataAbstractApi.createApi(800, 600);
+            Api.createBallsList(1);
+            double x = Api.getBall(0).ballX;
+            double y = Api.getBall(0).ballY;
+            Api.getBall(0).ballNewX = 5;
+            Api.getBall(0).ballNewY = 5;
+            Api.getBall(0).ballMove();
+            Assert.AreNotEqual(x, Api.getBall(0).ballX);
+            Assert.AreNotEqual(y, Api.getBall(0).ballY);
         }
 
         [TestMethod]
         public void setTests()
         {
-            DApi = DataAbstractApi.CreateApi(800, 600);
-            DApi.CreateBallsList(1);
-            DApi.GetBall(0).X = 10;
-            DApi.GetBall(0).Y = 17;
-            DApi.GetBall(0).NewX = 4;
-            DApi.GetBall(0).NewY = -3;
-            Assert.AreEqual(10, DApi.GetBall(0).X);
-            Assert.AreEqual(17, DApi.GetBall(0).Y);
-            Assert.AreEqual(4, DApi.GetBall(0).NewX);
-            Assert.AreEqual(-3, DApi.GetBall(0).NewY);
+            Api = DataAbstractApi.createApi(800, 600);
+            Api.createBallsList(1);
+            Api.getBall(0).ballX = 10;
+            Api.getBall(0).ballY = 17;
+            Api.getBall(0).ballNewX = 4;
+            Api.getBall(0).ballNewY = -3;
+            Assert.AreEqual(10, Api.getBall(0).ballX);
+            Assert.AreEqual(17, Api.getBall(0).ballY);
+            Assert.AreEqual(4, Api.getBall(0).ballNewX);
+            Assert.AreEqual(-3, Api.getBall(0).ballNewY);
         }
-
-
-
-
     }
 }
