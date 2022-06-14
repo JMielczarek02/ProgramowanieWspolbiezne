@@ -48,7 +48,7 @@ namespace Logic
         {
             for (int i = 0; i < balls.Count; i++)
             {
-                balls[i].ballStop();
+                balls[i].stopBall();
                 balls[i].PropertyChanged -= ballPositionChanged;
             }
         }

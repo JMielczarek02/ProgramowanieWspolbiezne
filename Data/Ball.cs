@@ -16,10 +16,10 @@ namespace Data
         double ballNewX { get; }
         double ballNewY { get; }
         void ballChangeSpeed(double Vx, double Vy);
-        void ballMove(double time, ConcurrentQueue<IBall> queue);
+        void moveBall(double time, ConcurrentQueue<IBall> queue);
         Task ballCreateMovementTask(int interval, ConcurrentQueue<IBall> queue);
-        void ballSave(ConcurrentQueue<IBall> queue);
-        void ballStop();
+        void saveBall(ConcurrentQueue<IBall> queue);
+        void stopBall();
     }
 
     internal class Ball : IBall
@@ -34,9 +34,9 @@ namespace Data
         private readonly Stopwatch stopwatch;
         private bool stop;
         private readonly object locker = new object();
-        public Ball(int identyfikator, int size, double x, double y, double newX, double newY, double weight)
+        public Ball(int idBall, int size, double x, double y, double newX, double newY, double weight)
         {
-            id = identyfikator;
+            id = idBall;
             this.size = size;
             this.x = x;
             this.y = y;
@@ -117,11 +117,11 @@ namespace Data
                 y = value;
             }
         }
-        public void ballSave(ConcurrentQueue<IBall> queue)
+        public void saveBall(ConcurrentQueue<IBall> queue)
         {
             queue.Enqueue(new Ball(ballID, ballSize, ballX, ballY, ballNewX, ballNewY, ballWeight));
         }
-        public void ballMove(double time, ConcurrentQueue<IBall> queue)
+        public void moveBall(double time, ConcurrentQueue<IBall> queue)
         {
             lock (locker)
             {
@@ -129,7 +129,7 @@ namespace Data
                 ballY += ballNewY * time;
                 RaisePropertyChanged(nameof(ballX));
                 RaisePropertyChanged(nameof(ballY));
-                ballSave(queue);
+                saveBall(queue);
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -150,14 +150,14 @@ namespace Data
                 stopwatch.Start();
                 if (!stop)
                 {
-                    ballMove(((interval - stopwatch.ElapsedMilliseconds) / 16), queue);
+                    moveBall(((interval - stopwatch.ElapsedMilliseconds) / 16), queue);
                 }
                 stopwatch.Stop();
 
                 await Task.Delay((int)(interval - stopwatch.ElapsedMilliseconds));
             }
         }
-        public void ballStop()
+        public void stopBall()
         {
             stop = true;
         }

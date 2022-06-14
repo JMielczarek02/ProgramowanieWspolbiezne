@@ -38,7 +38,7 @@ namespace TestData
             double y = b.ballY;
             b.ballChangeSpeed(5, 5);
             ConcurrentQueue<IBall> queue = new ConcurrentQueue<IBall>();
-            b.ballMove(1, queue);
+            b.moveBall(1, queue);
             Assert.AreNotEqual(x, b.ballX);
             Assert.AreNotEqual(y, b.ballY);
             ;
