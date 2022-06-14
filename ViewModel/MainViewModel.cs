@@ -4,26 +4,25 @@ using System.Windows.Input;
 
 namespace ViewModel
 {
-    public class MainWindowViewModel : BaseViewModel
+
+    public class MainViewModel : ViewModel
     {
         private readonly ModelAbstractApi modelLayer;
-        private int _BallVal = 1;
+        private int ballValue = 1;
         private int width;
         private int height;
-        private bool _isStopEnabled = false;
-        private bool isStartEnabled = false;
-        private bool _isAddEnabled = true;
+        private bool stop = false;
+        private bool start = false;
+        private bool add = true;
+        private bool delete = false;
         private int size = 0;
-        private IList _balls;
-
-        public ICommand addCommand { get; set; }
-
-        public ICommand runCommand { get; set; }
-
+        private IList balls;
+        public ICommand addCommand { get; }
+        public ICommand runCommand { get; }
         public ICommand stopCommand
-        { get; set; }
-
-        public MainWindowViewModel()
+        { get; }
+        public ICommand deleteCommand { get; }
+        public MainViewModel()
         {
             width = 600;
             height = 480;
@@ -31,54 +30,63 @@ namespace ViewModel
             stopCommand = new RelayCommand(Stop);
             addCommand = new RelayCommand(AddBalls);
             runCommand = new RelayCommand(Start);
-        }
+            deleteCommand = new RelayCommand(DeleteBalls);
 
+        }
         public bool isStopEnabled
         {
-            get { return _isStopEnabled; }
+            get { return stop; }
             set
             {
-                _isStopEnabled = value;
+                stop = value;
                 RaisePropertyChanged();
             }
         }
-
         public bool isRunEnabled
         {
-            get { return isStartEnabled; }
+            get { return start; }
             set
             {
-                isStartEnabled = value;
+                start = value;
                 RaisePropertyChanged();
             }
         }
-
         public bool isAddEnabled
         {
             get
             {
-                return _isAddEnabled;
+                return add;
             }
             set
             {
-                _isAddEnabled = value;
+                add = value;
                 RaisePropertyChanged();
             }
         }
-
-        public int ballValue
+        public bool isDeleteEnabled
         {
             get
             {
-                return _BallVal;
+                return delete;
             }
             set
             {
-                _BallVal = value;
+                delete = value;
                 RaisePropertyChanged();
             }
         }
-
+        public int ballAmount
+        {
+            get
+            {
+                return ballValue;
+            }
+            set
+            {
+                ballValue = value;
+                RaisePropertyChanged();
+            }
+        }
         public int Width
         {
             get
@@ -91,7 +99,6 @@ namespace ViewModel
                 RaisePropertyChanged();
             }
         }
-
         public int Height
         {
             get
@@ -104,50 +111,78 @@ namespace ViewModel
                 RaisePropertyChanged();
             }
         }
-
         private void AddBalls()
         {
-            size += ballValue;
-            if (size > 0)
+            size += ballAmount;
+            if (size > 0 && size <= 25)
             {
                 isRunEnabled = true;
+                isDeleteEnabled = true;
+                Balls = modelLayer.create(ballAmount);
+                ballAmount = 1;
             }
-            else
+            if (size <= 0)
             {
                 size = 0;
                 isRunEnabled = false;
+                isDeleteEnabled = false;
+                ballAmount = 1;
             }
-            Balls = modelLayer.start(ballValue);
-            ballValue = 1;
+            if (size == 25)
+            {
+                isAddEnabled = false;
+                ballAmount = 1;
+            }
+            if (size > 25)
+            {
+                size -= ballAmount;
+                ballAmount = 25 - size;
+            }
         }
-
+        private void DeleteBalls()
+        {
+            size -= ballAmount;
+            Balls = modelLayer.delete(ballAmount);
+            if (size >= 0 && size <= 25)
+            {
+                isRunEnabled = true;
+                isAddEnabled = true;
+            }
+            if (size <= 0)
+            {
+                size = 0;
+                isAddEnabled = true;
+                isRunEnabled = false;
+                isDeleteEnabled = false;
+            }
+            ballAmount = 1;
+        }
         private void Stop()
         {
             isStopEnabled = false;
             isAddEnabled = true;
             isRunEnabled = true;
+            isDeleteEnabled = true;
             modelLayer.stop();
         }
-
         private void Start()
         {
             isStopEnabled = true;
             isRunEnabled = false;
             isAddEnabled = false;
+            isDeleteEnabled = false;
             modelLayer.startMoving();
         }
-
         public IList Balls
         {
-            get => _balls;
+            get => balls;
             set
             {
-                if (value.Equals(_balls))
+                if (value.Equals(balls))
                 {
                     return;
                 }
-
-                _balls = value;
+                balls = value;
                 RaisePropertyChanged();
             }
         }

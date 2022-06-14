@@ -1,42 +1,51 @@
 using Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Concurrent;
+
 namespace TestData
 {
+
+
     [TestClass]
     public class BallTest
     {
-        private DataAbstractApi Api;
+        private DataAbstractApi DApi;
 
         [TestMethod]
-        
+        public void createIBallTest()
+        {
+            DApi = DataAbstractApi.createApi(800, 600);
+            IBall b = DApi.createBall(1);
+            Assert.AreEqual(1, b.ballID);
 
-       
+            Assert.IsTrue(b.ballX >= b.ballSize);
+            Assert.IsTrue(b.ballX <= (DApi.width - b.ballSize));
+            Assert.IsTrue(b.ballY >= b.ballSize);
+            Assert.IsTrue(b.ballY <= (DApi.height - b.ballSize));
+
+            Assert.AreEqual(30, b.ballSize);
+            Assert.IsTrue(b.ballWeight == b.ballSize);
+            Assert.IsTrue(b.ballNewX >= -5 && b.ballNewX <= 6);
+            Assert.IsTrue(b.ballNewY >= -5 && b.ballNewY <= 6);
+        }
+
+        [TestMethod]
         public void moveTest()
         {
-            Api = DataAbstractApi.createApi(800, 600);
-            Api.createBallsList(1);
-            double x = Api.getBall(0).ballX;
-            double y = Api.getBall(0).ballY;
-            Api.getBall(0).ballNewX = 5;
-            Api.getBall(0).ballNewY = 5;
-            Api.getBall(0).ballMove();
-            Assert.AreNotEqual(x, Api.getBall(0).ballX);
-            Assert.AreNotEqual(y, Api.getBall(0).ballY);
+            DApi = DataAbstractApi.createApi(800, 600);
+            IBall b = DApi.createBall(1);
+            double x = b.ballX;
+            double y = b.ballY;
+            b.ballChangeSpeed(5, 5);
+            ConcurrentQueue<IBall> queue = new ConcurrentQueue<IBall>();
+            b.ballMove(1, queue);
+            Assert.AreNotEqual(x, b.ballX);
+            Assert.AreNotEqual(y, b.ballY);
+            ;
         }
 
-        [TestMethod]
-        public void setTests()
-        {
-            Api = DataAbstractApi.createApi(800, 600);
-            Api.createBallsList(1);
-            Api.getBall(0).ballX = 10;
-            Api.getBall(0).ballY = 17;
-            Api.getBall(0).ballNewX = 4;
-            Api.getBall(0).ballNewY = -3;
-            Assert.AreEqual(10, Api.getBall(0).ballX);
-            Assert.AreEqual(17, Api.getBall(0).ballY);
-            Assert.AreEqual(4, Api.getBall(0).ballNewX);
-            Assert.AreEqual(-3, Api.getBall(0).ballNewY);
-        }
+
+
+
     }
 }

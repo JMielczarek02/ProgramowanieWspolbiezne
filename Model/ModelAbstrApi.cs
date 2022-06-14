@@ -10,40 +10,35 @@ namespace Model
         public abstract int width { get; }
         public abstract int height { get; }
         public abstract void startMoving();
-        public abstract IList start(int ballVal);
+        public abstract IList create(int ballVal);
+        public abstract IList delete(int ballVal);
         public abstract void stop();
-
-
         public static ModelAbstractApi createApi(int Weight, int Height)
         {
             return new ModelApi(Weight, Height);
         }
     }
+
     internal class ModelApi : ModelAbstractApi
     {
         public override int width { get; }
         public override int height { get; }
         private readonly LogicAbstractApi logicLayer;
-
-        public ModelApi(int Width, int Height)
+        public ModelApi(int width, int height)
         {
-            width = Width;
-            height = Height;
-            logicLayer = LogicAbstractApi.createApi(width, height);
+            this.width = width;
+            this.height = height;
+            logicLayer = LogicAbstractApi.createApi(this.width, this.height);
         }
-
         public override void startMoving()
         {
             logicLayer.start();
         }
-
         public override void stop()
         {
             logicLayer.stop();
         }
-
-        public override IList start(int ballVal) => logicLayer.createBalls(ballVal);
-
+        public override IList create(int ballVal) => logicLayer.createBalls(ballVal);
+        public override IList delete(int ballVal) => logicLayer.deleteBalls(ballVal);
     }
-
 }

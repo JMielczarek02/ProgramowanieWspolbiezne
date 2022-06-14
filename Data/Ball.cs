@@ -1,23 +1,24 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Data
-
 {
     public interface IBall : INotifyPropertyChanged
     {
-        int ballId { get; }
+        int ballID { get; }
         int ballSize { get; }
         double ballWeight { get; }
-        double ballX { get; set; }
-        double ballY { get; set; }
-        double ballNewX { get; set; }
-        double ballNewY { get; set; }
-
-        void ballMove();
-        void ballCreateMovementTask(int interval);
+        double ballX { get; }
+        double ballY { get; }
+        double ballNewX { get; }
+        double ballNewY { get; }
+        void ballChangeSpeed(double Vx, double Vy);
+        void ballMove(double time, ConcurrentQueue<IBall> queue);
+        Task ballCreateMovementTask(int interval, ConcurrentQueue<IBall> queue);
+        void ballSave(ConcurrentQueue<IBall> queue);
         void ballStop();
     }
 
@@ -30,10 +31,9 @@ namespace Data
         private double newX;
         private double newY;
         private readonly double weight;
-        private readonly Stopwatch stopwatch = new Stopwatch();
-        private Task task;
-        private bool stop = false;
-
+        private readonly Stopwatch stopwatch;
+        private bool stop;
+        private readonly object locker = new object();
         public Ball(int identyfikator, int size, double x, double y, double newX, double newY, double weight)
         {
             id = identyfikator;
@@ -43,91 +43,106 @@ namespace Data
             this.newX = newX;
             this.newY = newY;
             this.weight = weight;
+            stop = false;
+            stopwatch = new Stopwatch();
         }
-
-        public int ballId { get => id; }
+        public int ballID { get => id; }
         public int ballSize { get => size; }
+        public double ballWeight { get => weight; }
+        public void ballChangeSpeed(double Vx, double Vy)
+        {
+            lock (locker)
+            {
+                ballNewX = Vx;
+                ballNewY = Vy;
+            }
+        }
         public double ballNewX
         {
-            get => newX;
-            set
+            get
+            {
+                lock (locker) { return newX; }
+            }
+            private set
             {
                 if (value.Equals(newX))
                 {
                     return;
                 }
-
                 newX = value;
             }
         }
-
         public double ballNewY
         {
-            get => newY;
-            set
+            get
+            {
+                lock (locker) { return newY; }
+            }
+            private set
             {
                 if (value.Equals(newY))
                 {
                     return;
                 }
-
                 newY = value;
-
             }
         }
-
         public double ballX
         {
-            get => x;
-            set
+            get
+            {
+                lock (locker) { return x; }
+            }
+            private set
             {
                 if (value.Equals(x))
                 {
                     return;
                 }
-
                 x = value;
-                RaisePropertyChanged();
             }
         }
-
         public double ballY
         {
-            get => y;
-            set
+            get
+            {
+                lock (locker) { return y; }
+            }
+            private set
             {
                 if (value.Equals(y))
                 {
                     return;
                 }
-
                 y = value;
-                RaisePropertyChanged();
             }
         }
-
-        public void ballMove()
+        public void ballSave(ConcurrentQueue<IBall> queue)
         {
-            ballX +=  ballNewX;
-            ballY +=  ballNewY;
+            queue.Enqueue(new Ball(ballID, ballSize, ballX, ballY, ballNewX, ballNewY, ballWeight));
         }
-
-        public double ballWeight { get => weight; }
-
+        public void ballMove(double time, ConcurrentQueue<IBall> queue)
+        {
+            lock (locker)
+            {
+                ballX += ballNewX * time;
+                ballY += ballNewY * time;
+                RaisePropertyChanged(nameof(ballX));
+                RaisePropertyChanged(nameof(ballY));
+                ballSave(queue);
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
-
         internal void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public void ballCreateMovementTask(int interval)
+        public Task ballCreateMovementTask(int interval, ConcurrentQueue<IBall> queue)
         {
             stop = false;
-            task = Run(interval);
+            return Run(interval, queue);
         }
-
-        private async Task Run(int interval)
+        private async Task Run(int interval, ConcurrentQueue<IBall> queue)
         {
             while (!stop)
             {
@@ -135,10 +150,10 @@ namespace Data
                 stopwatch.Start();
                 if (!stop)
                 {
-                    ballMove();
+                    ballMove(((interval - stopwatch.ElapsedMilliseconds) / 16), queue);
                 }
-
                 stopwatch.Stop();
+
                 await Task.Delay((int)(interval - stopwatch.ElapsedMilliseconds));
             }
         }
